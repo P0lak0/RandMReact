@@ -1,22 +1,23 @@
-export const LocItem = ({location}) =>{
+export const LocItem = ({character}) =>{
     const getStatusClass = (status) => {
         switch (status) {
-            case "Dimension":
-                return "loc-dimension";
+            case "Alive":
+                return "character-alive";
+            case "Dead":    
+                return "character-dead";
             default:
-                return "loc-unknown";    
+                return "character-unknown";    
         }
     };
     
     return (
-        <div className={"loc " + getStatusClass(location.status)}>
-          <div className="loc-left">
-             <img src="https://rickandmortyapi.com/api/character/avatar/1.jpeg" alt={location.name} />
+        <div className={"character " + getStatusClass(character.status)}>
+          <div className="character-left">
+             <img src={character.image} alt={character.name} />
           </div>
-          <div className="loc-right">
-                <h3> {location.name}</h3>
-                <div>Тип:{location.type}</div>
-                <div>Измерение:{location.dimension}</div>
+          <div className="character-right">
+              <h3> {character.location.name}</h3>
+              <div>Герой живущий в этой локации:{character.name}</div>
           </div>
       </div>
     )

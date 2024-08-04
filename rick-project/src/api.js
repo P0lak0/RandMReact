@@ -12,12 +12,14 @@ export const fetchCharacters = async (ids) => {
     .then ((response) => response.json())
 };
 
-//локации
 export const fetchLocations = async (ids) => {
     await sleep(1000);
     return fetch(`https://rickandmortyapi.com/api/location/${ids.join(",")}`)
     .then ((response) => response.json())
 };
+
+
+
 
 const sleep = (ms) => {
     return new Promise((resolve) => setTimeout(resolve, ms));

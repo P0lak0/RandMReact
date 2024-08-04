@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { fetchEpisodes, fetchLocations } from "../api";
-import "./RickLoc.css";
+import "./Rick.css";
 
 export const RickLoc = () => {
 
     const [episodes, setEpisodes] = useState([]);
-    const [LocByEpisodes, setLocByEpisodes] = useState({});
+    const [charactersByEpisodes, setCharactersByEpisodes] = useState({});
     const [isLoadingByEpisodes, setIsLoadingByEpisodes] = useState({});
 
     useEffect(() => {
@@ -16,7 +16,7 @@ export const RickLoc = () => {
     }, []);
 
     const handleEpisodeClick = (episode) =>{
-        const ids = episode.location.map((location) =>{
+        const ids = episode.locations.map((location) =>{
             const id = location.split("/").pop();//разделение всей строки по / и выбор последнего отрезка с помощью pop
             return id;
         });
@@ -25,17 +25,19 @@ export const RickLoc = () => {
 
         fetchLocations(ids).then((data) =>{
             console.log(data);
-            setLocByEpisodes({...LocByEpisodes, [episode.id]: data })
+            setCharactersByEpisodes({...charactersByEpisodes, [episode.id]: data })
             setIsLoadingByEpisodes({...isLoadingByEpisodes, [episode.is]: false}); 
         });
     };
 
     const getStatusClass = (status) => {
         switch (status) {
-            case "Dimension":
-                return "loc-dimension";
+            case "Alive":
+                return "character-alive";
+            case "Dead":    
+                return "character-dead";
             default:
-                return "loc-unknown";    
+                return "character-unknown";    
         }
     };
 
@@ -48,23 +50,23 @@ export const RickLoc = () => {
                 className="episode" 
                 onClick={ () => handleEpisodeClick(episode)}>
                     <h3>{episode.episode + ":" + episode.name}</h3>
-                    <div className="loc-container">
+                    <div className="characters-container">
                         {isLoadingByEpisodes[episode.id] && (
                                 <div className="loading">Загрузка...</div>
                         )}
-                        {LocByEpisodes[episode.id]?.map((location) =>{
+                        {charactersByEpisodes[episode.id]?.map((character) =>{
                             return (
                             <div 
-                              key={episode.id + ":" + location.id} 
-                              className={"loc " + getStatusClass(location.status)}
+                              key={episode.id + ":" + character.id} 
+                              className={"character " + getStatusClass(character.status)}
                             >
-                                <div className="loc-left">
-                                   <img src="https://rickandmortyapi.com/api/character/avatar/1.jpeg" alt={location.name} />
+                                <div className="character-left">
+                                   <img src={character.image} alt={character.name} />
                                 </div>
-                                <div className="loc-right">
-                                    <h3> {location.name}</h3>
-                                    <div>Тип:{location.type}</div>
-                                    <div>Измерение:{location.dimension}</div>
+                                <div className="character-right">
+                                <h3> {character.location.name}</h3>
+                                <div>Тип:{character.location.type}</div>
+                                <div>Измерение:{character.location.url}</div>
                                 </div>
                                
                             </div>
